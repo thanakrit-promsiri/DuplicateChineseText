@@ -24,10 +24,8 @@ public class FileManager {
     }
 
     protected boolean checkLineAddCond(String line) {
-        if (line.trim().isEmpty()) {
-            return false;
-        }
-        return true;
+        return !line.trim().isEmpty();
     }
+
 
 }
