@@ -9,11 +9,13 @@ public class DuplicateChineseText {
 
     public void run() {
         FileManager fileManager = new FileManager();
-        DuplicateChineseTextProcess process = new  DuplicateChineseTextProcess();
+        DuplicateChineseTextProcess process = new DuplicateChineseTextProcess();
         String txtfile;
         try {
             txtfile = fileManager.readFileToText();
-            process.splitLine(txtfile);
+            txtfile = process.prepareText(txtfile);
+            
+            process.mapReduce(process.splitSentence(txtfile));
             //System.out.println(txtfile);
         } catch (Exception ex) {
 

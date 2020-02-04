@@ -15,7 +15,7 @@ public class FileManager {
         while (line != null) {
             if (checkLineAddCond(line)) {
                 sb.append(line);
-                sb.append("\n");
+                sb.append("@\n");
             }
 
             line = buf.readLine();
