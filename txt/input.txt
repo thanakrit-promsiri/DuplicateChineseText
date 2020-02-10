@@ -1,5 +1,5 @@
 Taishō vol. 22 no. 1430 (cf. no. 1429, no. 1428)
-Dharmaguptaka Bhikkhu Pātimokkha
+DharmaguptakaBhikkhuPātimokkha
 
 四分僧戒本(曇無德出)
 後秦世罽賓三藏佛陀耶舍譯
@@ -931,3 +931,4 @@ Concluding verses
 施一切眾生　　皆共成佛道
 
 四分僧戒本
+ทดสอบ จบ

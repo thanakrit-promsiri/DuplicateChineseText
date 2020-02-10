@@ -2,24 +2,28 @@ package duplicationtext;
 
 public class DuplicateChineseText {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         DuplicateChineseText engine = new DuplicateChineseText();
         engine.run();
     }
 
-    public void run() {
+    public void run() throws Exception {
         FileManager fileManager = new FileManager();
         DuplicateChineseTextProcess process = new DuplicateChineseTextProcess();
-        String txtfile;
-        try {
-            txtfile = fileManager.readFileToText();
-            txtfile = process.prepareText(txtfile);
-            
-            process.mapReduce(process.splitSentence(txtfile));
-            //System.out.println(txtfile);
-        } catch (Exception ex) {
+        String txtfileOrigin;
 
-        }
+        txtfileOrigin = fileManager.readFileToText();
+        String txtfile = process.prepareText(txtfileOrigin);
+
+        String mapDupline = process.mapReduce(process.splitSentence(txtfile));
+
+        int findDupInline = process.findDupInline(mapDupline);
+
+       String preparDuplicateMap = process.preparSummaryDuplicateMap(txtfile);
+
+       
+        // System.out.println(findDupInline);
+
     }
 
 }
