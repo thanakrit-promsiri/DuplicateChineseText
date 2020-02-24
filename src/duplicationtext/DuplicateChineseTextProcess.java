@@ -163,15 +163,16 @@ public class DuplicateChineseTextProcess {
     public String preparSummaryDuplicateMap(String original) {
 
         TreeMap<String, Integer> sorted = new TreeMap<>();
-
+        int x = 0;
         // Copy all data from hashMap into TreeMap 
         sorted.putAll(duplicateMap);
         // StringBuilder sb = new StringBuilder();
         // Display the TreeMap which is naturally sorted 
-        for (int i = 1; i <= lengthLineMax; i++) {
+        for (int i = lengthLineMax ; i >0 ; i--) {
             for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
                 if (entry.getKey().trim().length() == i) {
-//                    System.out.println(entry.getKey() + " :" + entry.getValue());
+                    
+                    System.out.println((x++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey().trim()));
                     //sb.append(entry.getKey().trim()).append("\n");
 
                     String strReplace = entry.getKey().trim();
@@ -183,23 +184,27 @@ public class DuplicateChineseTextProcess {
         }
 
         original = prepareText(original);
+   System.out.println("******************************");
+        mapReduceFinal(original);
 
-        mapReduceFinal(splitSentence(original));
-
-       // System.out.println(original);
+      
         return original;
     }
 
-    public String mapReduceFinal(String[] textArray) {
+    public String mapReduceFinal(String original) {
+
+        String[] textArray = splitSentence(original);
 
         TreeMap<String, Integer> reduce = new TreeMap<>();
 
         for (String text : textArray) {
             text = text.trim();
-            if (reduce.get(text) == null) {
-                reduce.put(text, 1);
-            } else {
-                reduce.put(text, reduce.get(text) + 1);
+            if (!text.isEmpty()) {
+                if (reduce.get(text) == null) {
+                    reduce.put(text, 1);
+                } else {
+                    reduce.put(text, reduce.get(text) + 1);
+                }
             }
         }
         int i = 0;
@@ -209,9 +214,9 @@ public class DuplicateChineseTextProcess {
         for (Map.Entry<String, Integer> entry : reduce.entrySet()) {
 
             if (entry.getValue() > 1) {
-                System.out.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue());
+                    System.out.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey()));
             } else {
-                System.err.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue());
+                   System.err.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue()+ "  : " + findCount(original, entry.getKey()));
             }
 
         }
