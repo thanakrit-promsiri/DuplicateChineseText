@@ -43,7 +43,7 @@ public class DuplicateChineseTextProcess {
         return lines;
     }
 
-    public String mapReduce(String[] textArray) {
+    public Map<String, Integer> mapReduce(String[] textArray) {
         Map<String, Integer> reduce = new HashMap<>();
 
         for (String text : textArray) {
@@ -54,22 +54,29 @@ public class DuplicateChineseTextProcess {
                 reduce.put(text, reduce.get(text) + 1);
             }
         }
+        return reduce;
+    }
+
+    public String mapReducetext(Map<String, Integer> reduce) {
+
         int i = 0;
         int lengthMax = 0;
         StringBuilder returnStr = new StringBuilder();
 
         for (Map.Entry<String, Integer> entry : reduce.entrySet()) {
 
-            if (entry.getValue() > 1) {
-                //System.out.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue());
+         /*   if (entry.getValue() > 1) {
+
                 duplicateMap.put(entry.getKey(), entry.getValue());
 
             } else {
                 if (entry.getKey().length() > lengthMax) {
                     lengthMax = entry.getKey().length();
                 }
-                returnStr.append(entry.getKey()).append("\n");
-            }
+
+            }*/
+            // System.out.println((i++) + " \t " + entry.getKey() + "  \t " + entry.getValue()+ "  \t " + entry.getKey().length());
+            returnStr.append(entry.getKey()).append("\n");
 
         }
 
@@ -168,10 +175,10 @@ public class DuplicateChineseTextProcess {
         sorted.putAll(duplicateMap);
         // StringBuilder sb = new StringBuilder();
         // Display the TreeMap which is naturally sorted 
-        for (int i = lengthLineMax ; i >0 ; i--) {
+        for (int i = lengthLineMax; i > 0; i--) {
             for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
                 if (entry.getKey().trim().length() == i) {
-                    
+
                     System.out.println((x++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey().trim()));
                     //sb.append(entry.getKey().trim()).append("\n");
 
@@ -184,19 +191,15 @@ public class DuplicateChineseTextProcess {
         }
 
         original = prepareText(original);
-   System.out.println("******************************");
+        System.out.println("******************************");
         mapReduceFinal(original);
 
-      
         return original;
     }
 
     public String mapReduceFinal(String original) {
-
         String[] textArray = splitSentence(original);
-
         TreeMap<String, Integer> reduce = new TreeMap<>();
-
         for (String text : textArray) {
             text = text.trim();
             if (!text.isEmpty()) {
@@ -210,19 +213,15 @@ public class DuplicateChineseTextProcess {
         int i = 0;
         int lengthMax = 0;
         StringBuilder returnStr = new StringBuilder();
-
         for (Map.Entry<String, Integer> entry : reduce.entrySet()) {
 
             if (entry.getValue() > 1) {
-                    System.out.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey()));
+                System.out.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey()));
             } else {
-                   System.err.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue()+ "  : " + findCount(original, entry.getKey()));
+                System.err.println((i++) + " : " + entry.getKey() + "  : " + entry.getValue() + "  : " + findCount(original, entry.getKey()));
             }
-
         }
-
         lengthLineMax = lengthMax;
-
         return returnStr.toString();
     }
 }
