@@ -5,12 +5,13 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.util.StringUtils;
 
 public class DuplicateChineseText {
 
     public static void main(String[] args) throws Exception {
         DuplicateChineseText engine = new DuplicateChineseText();
-        engine.runDict();
+        engine.duplicationfilter();
     }
 
     public void runDict() throws Exception {
@@ -25,7 +26,7 @@ public class DuplicateChineseText {
                 .replaceAll("\n", " ");*/
         String[] arrayString = txtfileOrigin.split("\\n");
         //String str = "[[如 (ดัง เหมือน ดังนี้ เหตุว่า)]是 (ด้วยอย่างนี้ )][語 (กล่าว วาจา)]。[諸 (ปวง ทั้งหลาย ทั้งหมด)][比丘 ภิกษุ][隨 (เป็นส่วนแห่ง ร่วมเป็น)]親厚。以[僧 (สงฆ์)] [物 (สิ่งของ)][與(มีส่วนร่วมใน พร้อมด้วย ด้วยกันกับ)] [者 (บุคคล ผู้ซึ่ง ผู้ )]。[波逸提 ปาจัตติกะ]。";
-        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+        Pattern pattern = Pattern.compile("\\((.*?)\\)");
         Matcher matcher = pattern.matcher(txtfileOrigin);
         StringBuilder bstr = new StringBuilder();
         while (matcher.find()) {
@@ -40,6 +41,46 @@ public class DuplicateChineseText {
 
         }
 
+    }
+
+    public void duplicationfilter() throws Exception {
+        FileManager fileManager = new FileManager();
+        DuplicateChineseTextProcess process = new DuplicateChineseTextProcess();
+
+        String input = fileManager.readFileToText("txt/input.txt");
+        String inputoriginal = input;
+        String duplicate = fileManager.readFileToText("txt/duplicationfilter.txt");
+
+        String[] linesduplicate = duplicate.split("\\r?\\n");
+        for (String string : linesduplicate) {
+            //input = input.replaceAll(string, " ".concat(string).concat(" "));
+            String[] arrstr = string.split("\\t");
+            String str = arrstr[0].trim();
+            int count = StringUtils.countOccurrencesOf(inputoriginal, str);
+            //System.out.println(string + "  \t " + count + "  \t " + str.length());
+            input = input.replaceAll(str, " ");
+        }
+
+        String[] aksaravisesaGhana = "！()，、。：；??？「」『』??".split("");
+        for (String aksaravisesa : aksaravisesaGhana) {
+            input = input.replace(aksaravisesa.charAt(0), ' ');
+        }
+
+        String[] lekhaGhana = "一二三四五六七八九十百".split("");
+        for (String lekha : lekhaGhana) {
+            input = input.replaceAll(lekha, " " + lekha + " ");
+        }
+
+        String[] arrayinput = input.split(" ");
+
+        Map<String, Integer> reduce = process.mapReduce(arrayinput);
+
+        for (Map.Entry<String, Integer> entry : reduce.entrySet()) {
+            int count = StringUtils.countOccurrencesOf(inputoriginal, entry.getKey().trim());
+            System.out.println(entry.getKey() + "  \t " + entry.getValue() + "  \t " + count + "  \t " + entry.getKey().length());
+        }
+
+        //System.out.println(input);
     }
 
     public void run() throws Exception {
@@ -81,22 +122,20 @@ public class DuplicateChineseText {
 
         }
 
-        String[] kriyavisesa = "若".split("");
+        String[] kriyavisesa = "若 不得".split(" ");
         for (int i = 0; i < kriyavisesa.length; i++) {
             strreplac = strreplac.replaceAll(kriyavisesa[i], " " + kriyavisesa[i] + " ");
 
         }
 //2-1
-        strreplac = splitword(3, strreplac);
         strreplac = splitword(2, strreplac);
-        strreplac = splitword(1, strreplac);
 
         String[] arrayString2 = strreplac.split(" ");
 
         Map<String, Integer> reduce2 = process.mapReduce(arrayString2);
 
         for (Map.Entry<String, Integer> entry : reduce2.entrySet()) {
-            System.out.println(entry.getKey() + "  \t " + entry.getValue() + "  \t " + entry.getKey().length());
+            //System.out.println(entry.getKey() + "  \t " + entry.getValue() + "  \t " + entry.getKey().length());
         }
 
         // System.out.println(strreplac);
